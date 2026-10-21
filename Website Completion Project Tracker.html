@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTANA Metro ATL Website Completion Project Tracker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for professional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            DEFAULT: '#1E3A8A',
+                            dark: '#172554',
+                            light: '#3B82F6'
+                        },
+                        amber: {
+                            DEFAULT: '#D97706',
+                            light: '#FBBF24',
+                            dark: '#B45309'
+                        },
+                        slateBg: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col text-slate-800">
+
+    <!-- Top Navigation / Header -->
+    <header class="bg-navy text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-amber p-3 rounded-xl shadow text-white">
+                        <i class="fa-solid fa-plane-departure text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-amber-light text-xs font-semibold tracking-wider uppercase">PTANA Metro Atlanta Chapter</span>
+                        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Website Completion Project Tracker</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 self-start md:self-auto">
+                    <button onclick="resetData()" class="bg-navy-dark hover:bg-blue-900 text-xs text-slate-200 px-3 py-2 rounded-lg border border-blue-800 transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-rotate-right"></i> Reset Progress
+                    </button>
+                    <button onclick="exportData()" class="bg-amber hover:bg-amber-dark text-xs font-medium text-white px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-download"></i> Export Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Summary Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <!-- Total Tasks -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Tasks</p>
+                    <h3 id="stat-total" class="text-2xl font-bold text-navy mt-1">28</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-navy flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+            </div>
+            <!-- Completed -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Completed</p>
+                    <h3 id="stat-completed" class="text-2xl font-bold text-emerald-700 mt-1">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+            <!-- Needs Revision / In Progress -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-amber-600">Needs Revision</p>
+                    <h3 id="stat-revision" class="text-2xl font-bold text-amber-700 mt-1">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+            </div>
+            <!-- Upcoming / Not Started -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Upcoming / Pending</p>
+                    <h3 id="stat-upcoming" class="text-2xl font-bold text-slate-700 mt-1">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-hourglass-start"></i>
+                </div>
+            </div>
+            <!-- Overall Progress Bar Card -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 sm:col-span-2 lg:col-span-1 flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Completion</span>
+                    <span id="stat-percent" class="text-sm font-bold text-navy">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                    <div id="progress-bar" class="bg-amber h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <span class="text-[11px] text-slate-400 mt-1">Goal: Professional Launch</span>
+            </div>
+        </div>
+
+        <!-- Controls Bar: Filters & Search -->
+        <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <!-- Filter Tabs -->
+            <div class="flex flex-wrap gap-2" id="filter-tabs">
+                <button onclick="setFilter('all')" data-filter="all" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-navy text-white transition shadow-sm">All Tasks (28)</button>
+                <button onclick="setFilter('Completed')" data-filter="Completed" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Completed</button>
+                <button onclick="setFilter('Needs Revision')" data-filter="Needs Revision" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Needs Revision</button>
+                <button onclick="setFilter('Upcoming')" data-filter="Upcoming" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Upcoming / Pending</button>
+            </div>
+            <!-- Search Input -->
+            <div class="relative w-full md:w-72">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </span>
+                <input type="text" id="search-input" oninput="handleSearch(event)" placeholder="Search tasks or requirements..." class="w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-navy focus:border-transparent bg-slate-50">
+            </div>
+        </div>
+
+        <!-- Task Grid / List Container -->
+        <div id="tasks-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Dynamically populated tasks -->
+        </div>
+
+        <!-- Notes / Action Items Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="text-amber"><i class="fa-solid fa-note-sticky text-lg"></i></div>
+                    <h2 class="text-lg font-bold text-navy">Chapter Leadership Notes & Next Steps</h2>
+                </div>
+                <button onclick="saveNotes()" class="bg-navy text-white text-xs font-medium px-4 py-2 rounded-xl hover:bg-navy-dark transition shadow-sm">
+                    <i class="fa-regular fa-floppy-disk mr-1"></i> Save Notes
+                </button>
+            </div>
+            <p class="text-xs text-slate-500">Record project decisions, admin credentials, meeting reminders, or notes for the web developer here.</p>
+            <textarea id="project-notes" rows="4" class="w-full p-4 text-xs sm:text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-navy bg-slate-50 custom-scrollbar" placeholder="Type custom project notes here... (Saved automatically in your browser)"></textarea>
+        </div>
+
+    </main>
+
+    <!-- Task Detail Modal -->
+    <div id="task-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+            <!-- Modal Header -->
+            <div class="bg-navy text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <span id="modal-task-number" class="bg-amber text-white text-xs font-bold px-2.5 py-1 rounded-lg">#1</span>
+                    <h3 id="modal-task-title" class="text-lg font-bold">Task Title</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-300 hover:text-white p-2 rounded-lg transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6 overflow-y-auto custom-scrollbar space-y-5 flex-1">
+                <div>
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Current Status</span>
+                    <div id="modal-task-status-badge" class="mt-1 inline-block"></div>
+                </div>
+                <div>
+                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Description & Requirements</h4>
+                    <p id="modal-task-desc" class="text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200"></p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Detailed Checklist / Sub-Items</h4>
+                    <ul id="modal-task-subitems" class="space-y-2 text-sm text-slate-700"></ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Administrator Notes</h4>
+                    <textarea id="modal-task-notes" oninput="updateTaskNotes(this.value)" rows="3" class="w-full p-3 text-xs sm:text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-navy bg-slate-50" placeholder="Add specific notes for this task..."></textarea>
+                </div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+                <button id="modal-toggle-btn" onclick="toggleTaskFromModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-check"></i> <span>Mark as Completed</span>
+                </button>
+                <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-medium bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-navy text-white text-xs sm:text-sm px-5 py-3 rounded-xl shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2">
+        <i class="fa-solid fa-circle-check text-amber"></i>
+        <span id="toast-message">Action successful</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>PTANA Metro Atlanta Chapter &bull; Website Completion Project Dashboard &bull; Designed for Travel Chapter Leadership & Administration</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Full 28 Tasks Dataset from the PTANA Metro ATL Website Completion Requirements document
+        const initialTasks = [
+            {
+                id: 1,
+                title: "Review and Complete Existing WordPress Website",
+                category: "Completed",
+                status: "Completed",
+                desc: "Review the existing WordPress website and identify complete pages, content gaps, broken links, missing images, placeholder text, duplicate pages, menu issues, mobile display problems, outdated plugins, and form issues.",
+                subitems: [
+                    "Audit completed and successfully published",
+                    "Identify incomplete pages, broken links, and missing images",
+                    "Check mobile display and navigation menu structure",
+                    "Review forms and plugins for security and performance"
+                ],
+                notes: "Initial audit successfully completed and published."
+            },
+            {
+                id: 2,
+                title: "Website Design and Branding",
+                category: "Completed",
+                status: "Completed",
+                desc: "Ensure professional travel-industry appearance reflecting PTANA Metro ATL with consistent logo, brand colors, fonts, headings, buttons, image styles, and page layouts.",
+                subitems: [
+                    "Professional, modern, welcoming, travel-focused aesthetic",
+                    "Consistent use of PTANA / Metro ATL logo and brand colors",
+                    "Clean layouts without clutter on homepage and key pages"
+                ],
+                notes: "Design finalized and aligned with chapter branding."
+            },
+            {
+                id: 3,
+                title: "Homepage",
+                category: "Completed",
+                status: "Completed",
+                desc: "Communicate who we are and why travel professionals should get involved with clear CTAs, About preview, Membership benefits, Upcoming events, News, Sponsors, Email signup, and Social links.",
+                subitems: [
+                    "Hero Section with strong intro statement and CTAs (Join Us, Upcoming Events, Learn More)",
+                    "About PTANA Metro ATL chapter overview & mission",
+                    "Membership benefits with prominent join button",
+                    "Upcoming Events display with registration",
+                    "Chapter News / Announcements area",
+                    "Suppliers / Partners / Sponsors recognition",
+                    "Email subscriber signup & Social media integration"
+                ],
+                notes: "Published with all mandatory hero and section elements."
+            },
+            {
+                id: 4,
+                title: "About Us Page",
+                category: "Completed",
+                status: "Completed",
+                desc: "Explain who PTANA Metro ATL is, mission, purpose, audience served, value of participation, and connection to the travel professional community.",
+                subitems: [
+                    "Clear mission and chapter purpose statement",
+                    "Target audience and travel community connection",
+                    "Encourage travel agents to become involved"
+                ],
+                notes: "Published successfully."
+            },
+            {
+                id: 5,
+                title: "Leadership Page",
+                category: "Completed",
+                status: "Completed",
+                desc: "Feature current chapter officers and board members with professional photo, name, title, company/agency, short bio, and contact info.",
+                subitems: [
+                    "Professional photo and title for each officer",
+                    "Company/agency affiliation and short bio",
+                    "Easy for administrator to update as leadership changes"
+                ],
+                notes: "Published and ready for annual updates."
+            },
+            {
+                id: 6,
+                title: "Membership Page",
+                category: "Completed",
+                status: "Completed",
+                desc: "Explain membership eligibility, benefits (networking, supplier relationships, education, training, meetings), how to join, secure online payment, and confirmation notifications.",
+                subitems: [
+                    "Who can join & membership categories",
+                    "Detailed membership benefits list",
+                    "Clear joining instructions and secure online payment",
+                    "Applicant confirmation and administrator notification"
+                ],
+                notes: "Critical membership hub active."
+            },
+            {
+                id: 7,
+                title: "Events and Calendar",
+                category: "Needs Revision",
+                status: "Needs Revision",
+                desc: "Easy-to-maintain Events section where admins can add events without technical assistance, supporting dates, times, locations, maps, virtual links, descriptions, fees, sponsors, and past event archiving.",
+                subitems: [
+                    "Upcoming events page & calendar view",
+                    "Support for event title, date, time, location, map link, virtual info",
+                    "Registration link, deadline, cost, sponsor details, max attendance",
+                    "Automatic archiving of past events"
+                ],
+                notes: "Initial version completed and published temporarily — pending review and revisions."
+            },
+            {
+                id: 8,
+                title: "Event Registration",
+                category: "Needs Revision",
+                status: "Needs Revision",
+                desc: "Capture attendee details (name, agency, email, phone, status, attendees, custom questions), provide confirmation, notify admins, export attendee lists, and implement secure payment if required.",
+                subitems: [
+                    "Registration form capturing essential contact and agency info",
+                    "Attendee confirmation & admin notification",
+                    "Easy view/export of attendee lists",
+                    "Secure payment solution implementation"
+                ],
+                notes: "Initial version completed and published temporarily — pending review and revisions."
+            },
+            {
+                id: 9,
+                title: "Member Resources",
+                category: "Completed",
+                status: "Completed",
+                desc: "Repository for chapter documents, educational materials, supplier info, meeting presentations, training, forms, and links with easy addition and optional member login protection.",
+                subitems: [
+                    "Chapter documents and educational materials",
+                    "Supplier info and meeting presentations",
+                    "Password-protected / member login solution recommendation"
+                ],
+                notes: "Member resources section published."
+            },
+            {
+                id: 10,
+                title: "Supplier / Partner Section",
+                category: "Completed",
+                status: "Completed",
+                desc: "Display travel suppliers, partners, and sponsors with company logo, name, short description, website link, agent contact info, and special offers.",
+                subitems: [
+                    "Company logo, description, and website link",
+                    "Travel agent contact person and details",
+                    "Easy addition/removal capability for admins"
+                ],
+                notes: "Published and recognized."
+            },
+            {
+                id: 11,
+                title: "News and Announcements",
+                category: "Completed",
+                status: "Completed",
+                desc: "News/Blog section for chapter announcements, industry news, meeting recaps, member highlights, supplier updates, and educational opportunities with social sharing.",
+                subitems: [
+                    "Chapter announcements and industry news",
+                    "Meeting recaps and member highlights",
+                    "Social-sharing capabilities"
+                ],
+                notes: "Active blog/news feed published."
+            },
+            {
+                id: 12,
+                title: "Photo Gallery",
+                category: "Completed",
+                status: "Completed",
+                desc: "Organized gallery for photos from meetings, networking, conferences, FAM trips, supplier events, and community activities with optimized image sizes.",
+                subitems: [
+                    "Categorized event and FAM trip photos",
+                    "Easy to update for administrators",
+                    "Optimized images for fast loading speed"
+                ],
+                notes: "Gallery published."
+            },
+            {
+                id: 13,
+                title: "Contact Us Page",
+                category: "Completed",
+                status: "Completed",
+                desc: "General contact info, contact form (name, email, phone, agency, subject, message), leadership contact details, social links, admin email delivery, and spam protection.",
+                subitems: [
+                    "Contact form with essential fields",
+                    "Delivery to designated chapter email address",
+                    "Spam protection integration"
+                ],
+                notes: "Contact page published with spam filtering."
+            },
+            {
+                id: 14,
+                title: "Email Marketing Integration",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Email signup form connecting with email marketing platform, collecting first name, last name, email, agency, and member status with duplicate contact management.",
+                subitems: [
+                    "Signup form connected to email platform",
+                    "Collect name, email, agency, and member status",
+                    "Duplicate contact management"
+                ],
+                notes: "Not yet started / pending configuration."
+            },
+            {
+                id: 15,
+                title: "Social Media Integration",
+                category: "Completed",
+                status: "Completed",
+                desc: "Clearly visible links to active social media accounts with correct routing, easy updates, and article/event social sharing.",
+                subitems: [
+                    "Links to active chapter social platforms",
+                    "Easy update capability",
+                    "Shareable articles and events"
+                ],
+                notes: "Social links active and verified."
+            },
+            {
+                id: 16,
+                title: "Mobile Responsiveness",
+                category: "Completed",
+                status: "Completed",
+                desc: "Ensure flawless operation across desktop, laptops, tablets, and smartphones, specifically testing navigation, forms, registration, buttons, images, calendars, and text readability.",
+                subitems: [
+                    "Responsive layout across all devices",
+                    "Optimized navigation and forms on mobile",
+                    "Thorough mobile testing before launch"
+                ],
+                notes: "Tested and confirmed across major viewports."
+            },
+            {
+                id: 17,
+                title: "Search Engine Optimization (SEO)",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Set up basic SEO including page titles, meta descriptions, headings, search-friendly URLs, image alt text, XML sitemap, indexing settings, and social sharing metadata.",
+                subitems: [
+                    "Page titles and meta descriptions",
+                    "Heading structure & clean URLs",
+                    "Image alt text & XML sitemap",
+                    "Search engine indexing setup"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 18,
+                title: "Website Performance",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Optimize loading speed through image optimization, caching, removal of unnecessary plugins/scripts, database cleanup, and proper performance configuration.",
+                subitems: [
+                    "Image optimization and caching",
+                    "Plugin and script audit",
+                    "Database cleanup and speed tuning"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 19,
+                title: "Website Security",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Implement standard WordPress security best practices including SSL/HTTPS, security configuration, spam protection, secure forms, admin permissions, login attack protection, and updates.",
+                subitems: [
+                    "SSL/HTTPS throughout website",
+                    "WordPress security hardening & firewall",
+                    "Admin permissions & login protection",
+                    "Review paid security services before purchase"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 20,
+                title: "Backups",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Configure automatic backups of WordPress database, website files, uploaded media, themes, and configuration with clear storage location and restoration guide.",
+                subitems: [
+                    "Automatic backup schedule configuration",
+                    "Include database, files, and media",
+                    "Document storage location and restoration process"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 21,
+                title: "Analytics",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Install website analytics to monitor visitors, top pages, traffic sources, event/membership activity, and form conversions using Google Analytics and Google Search Console.",
+                subitems: [
+                    "Google Analytics & Google Search Console setup",
+                    "Monitor visitors, traffic sources, and conversions",
+                    "Track event and membership page activity"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 22,
+                title: "Accessibility",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Follow web accessibility best practices including image alt text, readable font sizes, good color contrast, keyboard-friendly navigation, proper headings, and labeled forms.",
+                subitems: [
+                    "Alt text for all images",
+                    "Contrast and font size check",
+                    "Keyboard-friendly navigation and proper headings"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 23,
+                title: "Privacy and Legal Pages",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Create and configure Privacy Policy, Terms/Website Terms, and cookie information/consent banner with approved legal language.",
+                subitems: [
+                    "Privacy Policy page",
+                    "Website Terms of Use",
+                    "Cookie consent notice"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 24,
+                title: "WordPress Administration",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Ensure chapter administrators can manage homepage announcements, events, leadership, photos, news, suppliers, membership, links, and basic pages without coding.",
+                subitems: [
+                    "No-code content update capability for admins",
+                    "Role permissions setup",
+                    "Easy content management workflows"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 25,
+                title: "Administrator Training",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Provide a live training session and written/recorded instructions covering WordPress login, page editing, event creation, leadership updates, photos, news, and backups.",
+                subitems: [
+                    "Live training session for chapter admins",
+                    "Written instructions / recorded training video",
+                    "Guide for routine updates and backups"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 26,
+                title: "Pre-Launch Testing",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Test all pages, navigation, links, forms, event registration, email notifications, payment processing, mobile responsiveness, browsers, social links, downloads, SSL, analytics, and backups.",
+                subitems: [
+                    "Comprehensive link and form testing",
+                    "Mobile & browser compatibility check",
+                    "Payment and notification verification"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 27,
+                title: "Developer Deliverables",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Deliver fully functional WordPress site, completed pages, responsive design, working forms, events calendar, SEO/analytics config, documentation of plugins/licenses, and complete ownership transfer.",
+                subitems: [
+                    "Fully functional WordPress website handover",
+                    "Documentation of plugins, licenses, and renewal dates",
+                    "Confirmation of PTANA ownership of domain, content, and accounts"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 28,
+                title: "Project Management and Approval",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Initial project review, recommended changes, timeline, cost estimates for extra work, required premium plugins, and items needed from PTANA Metro ATL categorized by status.",
+                subitems: [
+                    "Review of current website and recommendations",
+                    "Timeline and budget review",
+                    "Clear categorization of pending assets and approvals"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            }
+        ];
+
+        // State Management
+        let tasks = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let activeModalTaskId = null;
+
+        // Load data from localStorage or fallback to initialTasks
+        function loadData() {
+            const savedTasks = localStorage.getItem('ptana_tasks');
+            if (savedTasks) {
+                try {
+                    tasks = JSON.parse(savedTasks);
+                } catch(e) {
+                    tasks = initialTasks;
+                }
+            } else {
+                tasks = JSON.parse(JSON.stringify(initialTasks));
+            }
+
+            const savedNotes = localStorage.getItem('ptana_project_notes');
+            if (savedNotes) {
+                document.getElementById('project-notes').value = savedNotes;
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('ptana_tasks', JSON.stringify(tasks));
+            updateStats();
+        }
+
+        function saveNotes() {
+            const notes = document.getElementById('project-notes').value;
+            localStorage.setItem('ptana_project_notes', notes);
+            showToast('Notes saved successfully!');
+        }
+
+        function resetData() {
+            tasks = JSON.parse(JSON.stringify(initialTasks));
+            localStorage.removeItem('ptana_tasks');
+            localStorage.removeItem('ptana_project_notes');
+            document.getElementById('project-notes').value = '';
+            renderTasks();
+            updateStats();
+            showToast('Project progress reset to default.');
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ tasks, notes: document.getElementById('project-notes').value }, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "PTANA_Website_Completion_Progress.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('Project data exported successfully!');
+        }
+
+        // Update Summary Stats
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.status === 'Completed').length;
+            const revision = tasks.filter(t => t.status === 'Needs Revision').length;
+            const upcoming = tasks.filter(t => t.status === 'Upcoming' || t.status === 'Pending').length;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-completed').textContent = completed;
+            document.getElementById('stat-revision').textContent = revision;
+            document.getElementById('stat-upcoming').textContent = upcoming;
+
+            const percent = Math.round((completed / total) * 100);
+            document.getElementById('stat-percent').textContent = percent + '%';
+            document.getElementById('progress-bar').style.width = percent + '%';
+        }
+
+        // Filter and Search Handler
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if(btn.dataset.filter === filter) {
+                    btn.className = "filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-navy text-white transition shadow-sm";
+                } else {
+                    btn.className = "filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+                }
+            });
+            renderTasks();
+        }
+
+        function handleSearch(e) {
+            searchQuery = e.target.value.toLowerCase();
+            renderTasks();
+        }
+
+        // Toggle Task Status (Completed <-> Upcoming / Needs Revision)
+        function toggleTaskStatus(id, event) {
+            if(event) event.stopPropagation();
+            const task = tasks.find(t => t.id === id);
+            if(task) {
+                if(task.status === 'Completed') {
+                    task.status = 'Upcoming';
+                } else {
+                    task.status = 'Completed';
+                }
+                saveData();
+                renderTasks();
+                if(activeModalTaskId === id) {
+                    openModal(id);
+                }
+                showToast(`Task #${id} status updated to ${task.status}`);
+            }
+        }
+
+        // Render Task Cards
+        function renderTasks() {
+            const container = document.getElementById('tasks-container');
+            container.innerHTML = '';
+
+            const filtered = tasks.filter(task => {
+                const matchesSearch = task.title.toLowerCase().includes(searchQuery) || task.desc.toLowerCase().includes(searchQuery) || task.id.toString().includes(searchQuery);
+                if (!matchesSearch) return false;
+
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'Completed') return task.status === 'Completed';
+                if (currentFilter === 'Needs Revision') return task.status === 'Needs Revision';
+                if (currentFilter === 'Upcoming') return task.status === 'Upcoming' || task.status === 'Pending';
+                return true;
+            });
+
+            if(filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-white p-12 rounded-2xl text-center border border-slate-200 text-slate-400">
+                        <i class="fa-solid fa-folder-open text-4xl mb-3"></i>
+                        <p class="text-sm font-medium">No matching tasks found.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(task => {
+                let badgeClass = '';
+                let badgeText = task.status;
+                let badgeIcon = '';
+
+                if(task.status === 'Completed') {
+                    badgeClass = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+                    badgeIcon = 'fa-circle-check';
+                } else if(task.status === 'Needs Revision') {
+                    badgeClass = 'bg-amber-50 text-amber-700 border border-amber-200';
+                    badgeIcon = 'fa-triangle-exclamation';
+                } else {
+                    badgeClass = 'bg-slate-100 text-slate-600 border border-slate-200';
+                    badgeIcon = 'fa-hourglass-start';
+                }
+
+                const isChecked = task.status === 'Completed';
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition flex flex-col justify-between cursor-pointer group";
+                card.onclick = () => openModal(task.id);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-3 mb-3">
+                            <div class="flex items-center space-x-2.5">
+                                <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">#${task.id}</span>
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5 ${badgeClass}">
+                                    <i class="fa-solid ${badgeIcon}"></i> ${badgeText}
+                                </span>
+                            </div>
+                            <button onclick="toggleTaskStatus(${task.id}, event)" class="w-6 h-6 rounded-lg border-2 ${isChecked ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-300 bg-white hover:border-navy'} flex items-center justify-center transition" title="Toggle Completion">
+                                ${isChecked ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
+                            </button>
+                        </div>
+                        <h3 class="text-base font-bold text-navy group-hover:text-blue-700 transition mb-2">${task.title}</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed">${task.desc}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                        <span><i class="fa-solid fa-list-check mr-1"></i> ${task.subitems.length} sub-items</span>
+                        <span class="text-navy font-medium group-hover:underline">View details &rarr;</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            updateStats();
+        }
+
+        // Modal Functions
+        function openModal(id) {
+            activeModalTaskId = id;
+            const task = tasks.find(t => t.id === id);
+            if(!task) return;
+
+            document.getElementById('modal-task-number').textContent = `#${task.id}`;
+            document.getElementById('modal-task-title').textContent = task.title;
+            document.getElementById('modal-task-desc').textContent = task.desc;
+            document.getElementById('modal-task-notes').value = task.notes || '';
+
+            // Status badge
+            const statusBadge = document.getElementById('modal-task-status-badge');
+            if(task.status === 'Completed') {
+                statusBadge.className = 'px-3 py-1 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 inline-flex items-center gap-1.5';
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Completed';
+            } else if(task.status === 'Needs Revision') {
+                statusBadge.className = 'px-3 py-1 text-xs font-semibold rounded-lg bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center gap-1.5';
+                statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Needs Revision';
+            } else {
+                statusBadge.className = 'px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 border border-slate-200 inline-flex items-center gap-1.5';
+                statusBadge.innerHTML = '<i class="fa-solid fa-hourglass-start"></i> Upcoming / Pending';
+            }
+
+            // Subitems list
+            const subitemsList = document.getElementById('modal-task-subitems');
+            subitemsList.innerHTML = '';
+            task.subitems.forEach((sub, idx) => {
+                const li = document.createElement('li');
+                li.className = "flex items-start space-x-2 text-xs sm:text-sm bg-slate-50 p-2.5 rounded-xl border border-slate-200";
+                li.innerHTML = `<i class="fa-solid fa-circle-check text-navy mt-0.5 text-xs"></i><span>${sub}</span>`;
+                subitemsList.appendChild(li);
+            });
+
+            // Modal Toggle Button
+            const toggleBtn = document.getElementById('modal-toggle-btn');
+            if(task.status === 'Completed') {
+                toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-amber hover:bg-amber-dark text-white transition flex items-center gap-2";
+                toggleBtn.innerHTML = '<i class="fa-solid fa-arrow-rotate-left"></i> <span>Mark as Pending</span>';
+            } else {
+                toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-2";
+                toggleBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Mark as Completed</span>';
+            }
+
+            document.getElementById('task-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('task-modal').classList.add('hidden');
+            activeModalTaskId = null;
+            renderTasks();
+        }
+
+        function toggleTaskFromModal() {
+            if(activeModalTaskId !== null) {
+                toggleTaskStatus(activeModalTaskId);
+                openModal(activeModalTaskId);
+            }
+        }
+
+        function updateTaskNotes(val) {
+            if(activeModalTaskId !== null) {
+                const task = tasks.find(t => t.id === activeModalTaskId);
+                if(task) {
+                    task.notes = val;
+                    saveData();
+                }
+            }
+        }
+
+        // Toast Notification Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Initialize on Load
+        window.onload = function() {
+            loadData();
+            renderTasks();
+        }
+    </script>
+</body>
+</html>
