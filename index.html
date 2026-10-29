@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="h-full">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,6 +72,14 @@
                         <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Website Completion Project Tracker</h1>
                     </div>
                 </div>
+                <div class="flex items-center space-x-3 self-start md:self-auto">
+                    <button onclick="resetData()" class="bg-navy-dark hover:bg-blue-900 text-xs text-slate-200 px-3 py-2 rounded-lg border border-blue-800 transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-rotate-right"></i> Reset Progress
+                    </button>
+                    <button onclick="exportData()" class="bg-amber hover:bg-amber-dark text-xs font-medium text-white px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-download"></i> Export Data
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -85,7 +93,7 @@
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Tasks</p>
-                    <h3 id="stat-total" class="text-2xl font-bold text-navy mt-1">28</h3>
+                    <h3 id="stat-total" class="text-2xl font-bold text-navy mt-1">30</h3>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-blue-50 text-navy flex items-center justify-center font-bold">
                     <i class="fa-solid fa-list-check"></i>
@@ -138,7 +146,7 @@
         <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <!-- Filter Tabs -->
             <div class="flex flex-wrap gap-2" id="filter-tabs">
-                <button onclick="setFilter('all')" data-filter="all" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-navy text-white transition shadow-sm">All Tasks (28)</button>
+                <button onclick="setFilter('all')" data-filter="all" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-navy text-white transition shadow-sm">All Tasks (30)</button>
                 <button onclick="setFilter('Completed')" data-filter="Completed" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Completed</button>
                 <button onclick="setFilter('Needs Revision')" data-filter="Needs Revision" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Needs Revision</button>
                 <button onclick="setFilter('Upcoming')" data-filter="Upcoming" class="filter-btn px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Upcoming / Pending</button>
@@ -207,7 +215,10 @@
                 </div>
             </div>
             <!-- Modal Footer -->
-            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-end">
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+                <button id="modal-toggle-btn" onclick="toggleTaskFromModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-check"></i> <span>Mark as Completed</span>
+                </button>
                 <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-medium bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Close</button>
             </div>
         </div>
@@ -228,7 +239,7 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Full 28 Tasks Dataset from the PTANA Metro ATL Website Completion Requirements document
+        // Full Tasks Dataset including QR Scan Portal and Footer Quick Links update
         const initialTasks = [
             {
                 id: 1,
@@ -316,6 +327,31 @@
             },
             {
                 id: 7,
+                title: "QR Scan Portal Member Access",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Seamless digital entry points for your WordPress site. Scan the QR codes below to access registration or login directly to the membership portal.",
+                subitems: [
+                    "New Member Registration (https://yourwebsite.com/register) - Point phone camera to open quick onboarding and registration form.",
+                    "Member Portal Login (https://yourwebsite.com/membership-portal) - Scan to log in directly to active membership account and dashboard."
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 8,
+                title: "Update Footer Quick Links",
+                category: "Upcoming",
+                status: "Upcoming",
+                desc: "Here is a well-structured, multi-column layout optimized for your footer to help members and visitors easily navigate essential pages.",
+                subitems: [
+                    "Column 1: Explore (Home, About Us, Supplier & Partner, News & Updates, Photo Gallery)",
+                    "Column 2: Member Hub (Join PTANA, My Account / Login, Events & Tickets, Resources)",
+                    "Column 3: Support & Legal (Contact Us, Privacy Policy, Terms & Conditions, Code of Conduct, FAQs)"
+                ],
+                notes: "Upcoming Task — Not Yet Started."
+            },
+            {
+                id: 9,
                 title: "Events and Calendar",
                 category: "Needs Revision",
                 status: "Needs Revision",
@@ -329,7 +365,7 @@
                 notes: "Initial version completed and published temporarily — pending review and revisions."
             },
             {
-                id: 8,
+                id: 10,
                 title: "Event Registration",
                 category: "Needs Revision",
                 status: "Needs Revision",
@@ -343,7 +379,7 @@
                 notes: "Initial version completed and published temporarily — pending review and revisions."
             },
             {
-                id: 9,
+                id: 11,
                 title: "Member Resources",
                 category: "Completed",
                 status: "Completed",
@@ -356,7 +392,7 @@
                 notes: "Member resources section published."
             },
             {
-                id: 10,
+                id: 12,
                 title: "Supplier / Partner Section",
                 category: "Completed",
                 status: "Completed",
@@ -369,7 +405,7 @@
                 notes: "Published and recognized."
             },
             {
-                id: 11,
+                id: 13,
                 title: "News and Announcements",
                 category: "Completed",
                 status: "Completed",
@@ -382,7 +418,7 @@
                 notes: "Active blog/news feed published."
             },
             {
-                id: 12,
+                id: 14,
                 title: "Photo Gallery",
                 category: "Completed",
                 status: "Completed",
@@ -395,7 +431,7 @@
                 notes: "Gallery published."
             },
             {
-                id: 13,
+                id: 15,
                 title: "Contact Us Page",
                 category: "Completed",
                 status: "Completed",
@@ -408,7 +444,7 @@
                 notes: "Contact page published with spam filtering."
             },
             {
-                id: 14,
+                id: 16,
                 title: "Email Marketing Integration",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -421,7 +457,7 @@
                 notes: "Not yet started / pending configuration."
             },
             {
-                id: 15,
+                id: 17,
                 title: "Social Media Integration",
                 category: "Completed",
                 status: "Completed",
@@ -434,7 +470,7 @@
                 notes: "Social links active and verified."
             },
             {
-                id: 16,
+                id: 18,
                 title: "Mobile Responsiveness",
                 category: "Completed",
                 status: "Completed",
@@ -447,7 +483,7 @@
                 notes: "Tested and confirmed across major viewports."
             },
             {
-                id: 17,
+                id: 19,
                 title: "Search Engine Optimization (SEO)",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -461,7 +497,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 18,
+                id: 20,
                 title: "Website Performance",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -474,7 +510,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 19,
+                id: 21,
                 title: "Website Security",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -488,7 +524,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 20,
+                id: 22,
                 title: "Backups",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -501,7 +537,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 21,
+                id: 23,
                 title: "Analytics",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -514,7 +550,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 22,
+                id: 24,
                 title: "Accessibility",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -527,7 +563,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 23,
+                id: 25,
                 title: "Privacy and Legal Pages",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -540,7 +576,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 24,
+                id: 26,
                 title: "WordPress Administration",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -553,7 +589,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 25,
+                id: 27,
                 title: "Administrator Training",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -566,7 +602,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 26,
+                id: 28,
                 title: "Pre-Launch Testing",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -579,7 +615,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 27,
+                id: 29,
                 title: "Developer Deliverables",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -592,7 +628,7 @@
                 notes: "Upcoming Task — Not Yet Started."
             },
             {
-                id: 28,
+                id: 30,
                 title: "Project Management and Approval",
                 category: "Upcoming",
                 status: "Upcoming",
@@ -642,6 +678,27 @@
             showToast('Notes saved successfully!');
         }
 
+        function resetData() {
+            tasks = JSON.parse(JSON.stringify(initialTasks));
+            localStorage.removeItem('ptana_tasks');
+            localStorage.removeItem('ptana_project_notes');
+            document.getElementById('project-notes').value = '';
+            renderTasks();
+            updateStats();
+            showToast('Project progress reset to default.');
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ tasks, notes: document.getElementById('project-notes').value }, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "PTANA_Website_Completion_Progress.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('Project data exported successfully!');
+        }
+
         // Update Summary Stats
         function updateStats() {
             const total = tasks.length;
@@ -654,7 +711,7 @@
             document.getElementById('stat-revision').textContent = revision;
             document.getElementById('stat-upcoming').textContent = upcoming;
 
-            const percent = Math.round((completed / total) * 100);
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
             document.getElementById('stat-percent').textContent = percent + '%';
             document.getElementById('progress-bar').style.width = percent + '%';
         }
@@ -805,6 +862,16 @@
                 subitemsList.appendChild(li);
             });
 
+            // Modal Toggle Button
+            const toggleBtn = document.getElementById('modal-toggle-btn');
+            if(task.status === 'Completed') {
+                toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-amber hover:bg-amber-dark text-white transition flex items-center gap-2";
+                toggleBtn.innerHTML = '<i class="fa-solid fa-arrow-rotate-left"></i> <span>Mark as Pending</span>';
+            } else {
+                toggleBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-2";
+                toggleBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Mark as Completed</span>';
+            }
+
             document.getElementById('task-modal').classList.remove('hidden');
         }
 
@@ -812,6 +879,13 @@
             document.getElementById('task-modal').classList.add('hidden');
             activeModalTaskId = null;
             renderTasks();
+        }
+
+        function toggleTaskFromModal() {
+            if(activeModalTaskId !== null) {
+                toggleTaskStatus(activeModalTaskId);
+                openModal(activeModalTaskId);
+            }
         }
 
         function updateTaskNotes(val) {
